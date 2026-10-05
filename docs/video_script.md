@@ -2,14 +2,14 @@
 
 ## 0. Pre-flight checklist (do this BEFORE recording)
 
-- [ ] Server running: in the project folder, `python3 -m http.server 8123` (leave it running).
-- [ ] Open **Brave** at `http://127.0.0.1:8123` (any Chromium browser works).
+- [x] Server running: in the project folder, `python3 -m http.server 8123` (leave it running).
+- [x] Open **Brave** at `http://127.0.0.1:8123` (any Chromium browser works).
 - [ ] Top-right badge reads **MOCK** — correct. Mock mode needs no API key, no mic permission, no network, and is fully deterministic. Do NOT open the ⚙ API modal.
 - [ ] Window fullscreen (hide bookmarks bar, ⌘⇧B).
-- [ ] Do ONE practice run end-to-end (~2 min) so you know the rhythm, then refresh the page for the real take. Refreshing resets everything deterministically.
-- [ ] Recording: **⌘⇧5 → record entire screen**, microphone ON if narrating live (narration can also be added later as voiceover — full text below).
-- [ ] **English subtitles appear automatically** under every Korean line — you do not need to read English aloud; pick ONE narration language (KO or EN) from the blocks below.
-- [ ] If a take goes wrong: refresh the page and start that block again. The report screen has a **[다시 하기]** button that reloads.
+- [x] Do ONE practice run end-to-end (~2 min) so you know the rhythm, then refresh the page for the real take. Refreshing resets everything deterministically.
+- [x] Recording: **⌘⇧5 → record entire screen**, microphone ON if narrating live (narration can also be added later as voiceover — full text below).
+- [x] **English subtitles appear automatically** under every Korean line — you do not need to read English aloud; pick ONE narration language (KO or EN) from the blocks below.
+- [x] If a take goes wrong: refresh the page and start that block again. The report screen has a **[다시 하기]** button that reloads.
 
 **Expected scores on the report board (mock mode):** 내용(Content) **80** (fixed: mean of 82/85/74/78/81/80), 복장(Attire) **100** (정장+검정+대기업), 태도·시선(Body) **varies with your actual mouse/head movement** (~65–90 if you keep looking at the interviewer and bow once). Total = 0.5·80 + 0.3·Body + 0.2·100 → expect **~80–87, grade A**. Say the body/total numbers you actually got — do not read 80/100 as the total.
 
