@@ -343,43 +343,83 @@ export class World {
   _drawReport() {
     const c = this._ctx;
     const d = this._report || { content: 0, body: 0, attire: 0, total: 0, grade: '-', lines: [] };
+    const GRADE_COLORS = { S: '#c9a227', A: '#3aa17e', B: '#4a90d9', C: '#b0553f' };
+    // header
     c.fillStyle = '#222222';
-    c.font = 'bold 44px sans-serif';
+    c.font = 'bold 46px sans-serif';
     c.textAlign = 'left';
-    c.fillText('면접 결과', 48, 78);
-    const rows = [['내용', d.content], ['태도·시선', d.body], ['복장', d.attire]];
-    rows.forEach(([label, v], i) => {
-      const y = 128 + i * 58;
+    c.fillText('면접 결과', 48, 72);
+    c.fillStyle = '#8a857b';
+    c.font = '20px sans-serif';
+    c.fillText('INTERVIEW REPORT', 50, 100);
+    // grade badge + total (right column)
+    c.fillStyle = GRADE_COLORS[d.grade] || '#777777';
+    this._roundRect(838, 36, 148, 148, 24);
+    c.fill();
+    c.fillStyle = '#ffffff';
+    c.font = 'bold 96px sans-serif';
+    c.textAlign = 'center';
+    c.fillText(String(d.grade ?? '-'), 912, 148);
+    c.fillStyle = '#333333';
+    c.font = '22px sans-serif';
+    c.fillText('총점 / TOTAL', 912, 224);
+    c.font = 'bold 52px sans-serif';
+    c.fillText(String(d.total ?? 0), 912, 274);
+    // category bars (color-coded, weighted)
+    const rows = [
+      ['내용 · 50%', d.content, '#4a90d9'],
+      ['태도·시선 · 30%', d.body, '#3aa17e'],
+      ['복장 · 20%', d.attire, '#c9a227'],
+    ];
+    rows.forEach(([label, v, color], i) => {
+      const y = 140 + i * 64;
       c.fillStyle = '#44403a';
-      c.font = '28px sans-serif';
+      c.font = '25px sans-serif';
       c.textAlign = 'left';
-      c.fillText(label, 120, y + 36);
+      c.fillText(label, 60, y + 24);
       c.fillStyle = '#e3ded2';
-      this._roundRect(320, y + 8, 380, 30, 15);
+      this._roundRect(300, y, 380, 30, 15);
       c.fill();
       const w = Math.max(0, Math.min(100, v || 0)) / 100 * 380;
       if (w > 0) {
-        c.fillStyle = '#4a90d9';
-        this._roundRect(320, y + 8, w, 30, 15);
+        c.fillStyle = color;
+        this._roundRect(300, y, Math.max(w, 30), 30, 15);
         c.fill();
       }
       c.fillStyle = '#333333';
       c.font = 'bold 28px sans-serif';
-      c.fillText(String(v ?? 0), 720, y + 36);
+      c.fillText(String(v ?? 0), 696, y + 25);
     });
-    c.fillStyle = '#333333';
-    c.font = 'bold 40px sans-serif';
-    c.textAlign = 'left';
-    c.fillText(`총점 ${d.total ?? 0}`, 120, 368);
-    c.fillStyle = '#c9a227';
-    c.font = 'bold 120px sans-serif';
-    c.textAlign = 'center';
-    c.fillText(String(d.grade ?? '-'), 830, 400);
+    // per-answer score chart (optional: d.scores = six answer scores)
+    const sc = Array.isArray(d.scores) ? d.scores : [];
+    if (sc.length) {
+      c.fillStyle = '#b3ac9d';
+      c.fillRect(48, 326, 720, 2);
+      c.fillStyle = '#44403a';
+      c.font = '22px sans-serif';
+      c.textAlign = 'left';
+      c.fillText('답변별 점수 / PER-ANSWER SCORES', 60, 358);
+      const base = 442, maxH = 66, bw = 56, gap = 26, x0 = 76;
+      sc.slice(0, 8).forEach((v, i) => {
+        const h = Math.max(0, Math.min(100, v || 0)) / 100 * maxH;
+        const x = x0 + i * (bw + gap);
+        c.fillStyle = v >= 80 ? '#3aa17e' : v >= 70 ? '#d9a441' : '#b0553f';
+        c.fillRect(x, base - h, bw, h);
+        c.fillStyle = '#333333';
+        c.font = 'bold 20px sans-serif';
+        c.textAlign = 'center';
+        c.fillText(String(v), x + bw / 2, base - h - 8);
+        c.fillStyle = '#8a857b';
+        c.font = '18px sans-serif';
+        c.fillText(i % 2 === 0 ? `Q${i / 2 + 1}` : '꼬리', x + bw / 2, base + 24);
+      });
+    }
+    // feedback lines
     c.fillStyle = '#5a554d';
-    c.font = '24px sans-serif';
+    c.font = '23px sans-serif';
     c.textAlign = 'left';
     (d.lines || []).slice(0, 4).forEach((ln, i) => {
-      c.fillText(`• ${ln}`, 60, 448 + i * 34, 620);
+      c.fillText(`• ${ln}`, 60, 500 + i * 32, 620);
     });
     this._drawButton('restart', CANVAS_W - 48 - 260, CANVAS_H - 48 - 80, 260, 80, '다시 하기',
       { bg: '#4a6fa5', fg: '#ffffff', font: 'bold 32px sans-serif', radius: 18, border: '#4a6fa5' });

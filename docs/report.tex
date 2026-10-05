@@ -1,8 +1,9 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[margin=2.4cm]{geometry}
 \usepackage{amsmath}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{capt-of}
 \usepackage{enumitem}
 \setlength{\parskip}{2pt}
@@ -30,6 +31,14 @@ The project is the stage-1 deliverable for Task 3-2, ``Meta Quest 2 VR-Based Phy
   \item \textbf{G5 --- Honest scope.} State plainly what is verified (macOS desktop simulator) and what is pending (on-device Quest~2 test).
 \end{itemize}
 
+\subsection{Why this project matters}
+Interview outcomes decide careers and first salaries, yet the coaching that improves them is expensive, scarce, and unevenly distributed; candidates without money or connections rehearse alone and receive no feedback at all. The gap is acute in Korea, where one interview judges content, demeanor, and appearance simultaneously, and where existing software trains content only. Three properties make a VR trainer the right response:
+\begin{itemize}[leftmargin=1.6em,itemsep=1pt]
+  \item \textbf{Equal access.} The app is free, static, and runs on an inexpensive used headset or any laptop --- big-city-quality coaching for regional students, directly matching the Glocal Project's regional-talent mission.
+  \item \textbf{Embodied, measurable practice.} Presence makes candidates actually bow, hold eye contact, and manage nerves; head-pose telemetry turns these soft skills into numbers that can be trained and tracked across attempts.
+  \item \textbf{Unlimited private repetition.} A strict AI interviewer never tires and never judges; candidates can fail safely until the behavior sticks.
+\end{itemize}
+
 \section{Overall Workflow}
 \subsection{End-to-end pipeline}
 The application is a three-state machine, \texttt{DRESS} $\rightarrow$ \texttt{INTERVIEW} $\rightarrow$ \texttt{REPORT}, driven by \texttt{js/main.js}:
@@ -37,7 +46,7 @@ The application is a three-state machine, \texttt{DRESS} $\rightarrow$ \texttt{I
   \item \textbf{DRESS (dressing room).} The candidate selects hair (\emph{geomjeong} black / \emph{galsaek} brown / \emph{geum-bal} blond / \emph{parang} blue), outfit (\emph{jeongsuit} suit / \emph{kaejueol} casual / \emph{teureining} training wear), and target industry (\emph{daegieop} large corporation / \emph{seutateuop} startup / \emph{gonggieop} public enterprise) on a canvas-texture UI panel operated by raycast clicking; a primitive-mesh player avatar at a fake mirror updates after each selection. On confirm, the attire score is computed: by the deterministic rubric of Section~4.1 in mock mode, or by a gpt-4o vision call on an avatar screenshot in live mode.
   \item \textbf{INTERVIEW --- greeting.} The primitive-mesh interviewer greets the candidate in Korean; its jaw bobs while speech is active, and the subtitle line (\texttt{\#sub}) mirrors all speech. The system waits for the greeting bow: pitching the head to $-35^\circ$ or below registers on the debounced bow counter shown in the HUD.
   \item \textbf{INTERVIEW --- question loop.} Three fixed questions are asked in order: \emph{jagisogae} (self-introduction), \emph{jiwondonggi} (motivation for applying), and \emph{jangdanjeom} (strengths and weaknesses). Each is followed by exactly one adaptive follow-up generated from the candidate's answer. Answers are given by voice using a push-to-talk toggle. Each of the six answers (3 questions + 3 follow-ups) receives a $0$--$100$ score plus feedback.
-  \item \textbf{REPORT (report board).} The board shows the three category scores---\emph{naeyong} (content), \emph{taedo-siseon} (attitude and gaze), \emph{bokjang} (attire)---plus the weighted total, an S/A/B/C grade, and per-answer feedback.
+  \item \textbf{REPORT (report board).} The board shows the three category scores---\emph{naeyong} (content), \emph{taedo-siseon} (attitude and gaze), \emph{bokjang} (attire)---as color-coded weighted bars with a per-answer score chart, plus the weighted total, a color-coded S/A/B/C grade badge, and per-answer feedback.
 \end{enumerate}
 
 \subsection{API sequence: live vs.\ mock}
@@ -143,7 +152,14 @@ Worked example: content $80$, body $77$, attire $100$ gives $40.0 + 23.1 + 20.0 
 The primary regression gate for stage 1 is a headless boot smoke check. The app is served statically (\texttt{python3 -m http.server 8123}) and loaded in headless Chrome while console output is captured. Pass criteria: the page boots with \emph{no uncaught exceptions}; the WebGL canvas is created; the state machine starts in \texttt{DRESS}; telemetry is zeroed; and mock mode is active (\texttt{\#badge} shows MOCK). The check is re-run after every change. It deliberately verifies boot integrity only---interaction is covered by manual scripted runs---and is reported here as a smoke check, not a test suite.
 
 \subsection{Full mock end-to-end run}
-A complete \texttt{DRESS} $\rightarrow$ \texttt{INTERVIEW} $\rightarrow$ \texttt{REPORT} pass was executed with zero network traffic. Dressing with suit / black / large-corp scored attire~100. Q1 (\emph{jagisogae}) scored \textbf{82}, matching the head of the canned queue; the six answers produced $[82, 85, 74, 78, 81, 80]$ for a content mean of exactly~80. The report board rendered all three category scores, the weighted total, the grade, and per-answer feedback.
+A complete \texttt{DRESS} $\rightarrow$ \texttt{INTERVIEW} $\rightarrow$ \texttt{REPORT} pass was executed with zero network traffic. Dressing with suit / black / large-corp scored attire~100. Q1 (\emph{jagisogae}) scored \textbf{82}, matching the head of the canned queue; the six answers produced $[82, 85, 74, 78, 81, 80]$ for a content mean of exactly~80. The report board rendered all three category scores, the weighted total, the grade, and per-answer feedback. Figure~\ref{fig:demo} shows the dressing room and the resulting report board.
+
+\begin{center}
+\includegraphics[width=0.44\linewidth]{dressing_room.png}\hfill
+\includegraphics[width=0.44\linewidth]{report_board.png}
+\captionof{figure}{Stage-1 demo run in mock mode. Left: dressing room (F1) --- selection panel and avatar at the fake mirror. Right: report board (F5) --- color-coded category bars, per-answer score chart, weighted total, and grade badge.}
+\label{fig:demo}
+\end{center}
 
 \subsection{Formula spot checks}
 The three binding attire examples were verified by hand arithmetic: $70{+}20{+}10=100$, $70{+}5{+}5=80$, $70{-}15{-}15=40$ (Table~\ref{tab:attire-ex}). The body-language and total formulas were verified with the worked examples of Sections 4.2 and 4.3 ($77$ and $83.1 \rightarrow$ A).
@@ -152,7 +168,7 @@ The three binding attire examples were verified by hand arithmetic: $70{+}20{+}1
 Live mode was started with an intentionally invalid API key. Each failing call---STT, evaluation, follow-up, attire, TTS---fell back to the mock implementation for that call, and the session still completed end to end. The never-hard-fail policy held.
 
 \subsection{Demo video}
-A 3:00 screen recording was produced on macOS (Cmd+Shift+5) following the shot list in \texttt{docs/video\_script.md}: intro (0:00--0:15), dressing room (0:15--0:45), full Q1 cycle with visible HUD and greeting bow (0:45--1:50, Q2/Q3 removed by jump cut), report-board walkthrough (1:50--2:30), and architecture slide with closing (2:30--3:00). Recording in mock mode guarantees the video cannot be blocked by network or API issues.
+A 3:00 screen recording was produced on macOS (Cmd+Shift+5) following the shot list in \texttt{docs/video\_script.md}: intro with motivation (0:00--0:18), dressing room (0:18--0:45), full Q1 cycle with visible HUD and greeting bow (0:45--1:52, Q2/Q3 removed by jump cut), report-board walkthrough (1:52--2:32), and architecture slide with closing (2:32--3:00). Recording in mock mode guarantees the video cannot be blocked by network or API issues.
 
 \section{Limitations and Stage-2 Roadmap}
 \textbf{Honest status.} The app was developed and verified on the macOS desktop simulator (Chrome with mouse-drag look). The Quest~2 deployment path is implemented via WebXR (own session button, \texttt{immersive-vr}, \texttt{local-floor}), but an on-device test is \emph{pending}: the team had no headset access during stage~1.

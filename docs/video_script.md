@@ -15,21 +15,21 @@
 
 ---
 
-## Block 1 — Title / intro (0:00–0:15)
+## Block 1 — Title / intro (0:00–0:18)
 
 **Shot:** Fresh-loaded dressing-room view. Badge reads MOCK.
 
 **Actions:** none. Hold still for 3 s, then slow drag to show the room, the mirror with the avatar, and the panel.
 
 **Narration KO:**
-> "안녕하십니까. 경상국립대학교 글로컬 프로젝트, 과제 3-2 'Meta Quest 2 기반 피지컬 AI 에이전트' 결과물, VR 면접 트레이너 '면접관'입니다. 답변 내용, 몸짓과 시선, 복장 — 세 가지를 동시에 평가하는 엄격한 한국식 면접 시뮬레이터입니다."
+> "안녕하십니까. 경상국립대학교 글로컬 프로젝트, 과제 3-2 'Meta Quest 2 기반 피지컬 AI 에이전트' 결과물, VR 면접 트레이너 '면접관'입니다. 면접 코칭은 비싸고, 기회는 불균등합니다. 이 트레이너는 누구에게나 무료로, 무제한의 실전 연습과 측정 가능한 피드백을 제공합니다. 답변 내용, 몸짓과 시선, 복장 — 세 가지를 동시에 평가하는 엄격한 한국식 면접 시뮬레이터입니다."
 
 **Narration EN:**
-> "Hello. This is 'Myeonjeopgwan', a VR interview trainer for Task 3-2, 'Meta Quest 2 VR-Based Physical AI Agent', Gyeongsang National University Glocal Project. A strict Korean-style interview simulator evaluating three axes at once: answer content, body language and gaze, and attire."
+> "Hello. This is 'Myeonjeopgwan', a VR interview trainer for Task 3-2, 'Meta Quest 2 VR-Based Physical AI Agent', Gyeongsang National University Glocal Project. Interview coaching is expensive and unequally available — this trainer gives anyone free, unlimited practice with measurable feedback. A strict Korean-style simulator evaluating three axes at once: answer content, body language and gaze, and attire."
 
 ---
 
-## Block 2 — Dressing room, F1 (0:15–0:45)
+## Block 2 — Dressing room, F1 (0:18–0:45)
 
 **Shot:** Panel + avatar in the fake mirror.
 
@@ -48,7 +48,7 @@
 
 ---
 
-## Block 3 — Interview, Q1 full cycle, F2+F3+F4 (0:45–1:55)
+## Block 3 — Interview, Q1 full cycle, F2+F3+F4 (0:45–1:52)
 
 **Shot:** Interview view, interviewer centered. **HUD top-left is always visible** (시선/Eye %, 움직임/Fidget, 인사/Bows — bilingual).
 
@@ -70,7 +70,7 @@
 
 ---
 
-## Block 4 — Report board, F5 (1:55–2:35)
+## Block 4 — Report board, F5 (1:52–2:32)
 
 **Shot:** Report board fills the view (after "수고하셨습니다. 결과를 정리하겠습니다.").
 
@@ -81,14 +81,14 @@
 4. Optionally end the block by hovering [다시 하기] — do not click it.
 
 **Narration KO:**
-> "결과 보드입니다. 내용은 여섯 답변의 평균 80점, 복장 100점, 그리고 방금 제 몸짓으로 만든 태도·시선 점수. 총점은 내용 50, 태도 30, 복장 20의 가중 평균이고, 90 이상 S, 80 이상 A, 70 이상 B, 그 아래는 C입니다. 아래에는 답변별 피드백이 엄격한 면접관의 어조로 표시됩니다."
+> "결과 보드입니다. 내용은 여섯 답변의 평균 80점, 복장 100점, 그리고 방금 제 몸짓으로 만든 태도·시선 점수. 색깔 막대가 세 항목, 가운데 막대그래프가 답변별 점수, 오른쪽 배지가 등급입니다. 총점은 내용 50, 태도 30, 복장 20의 가중 평균이고, 90 이상 S, 80 이상 A, 70 이상 B, 그 아래는 C입니다. 아래에는 답변별 피드백이 엄격한 면접관의 어조로 표시됩니다."
 
 **Narration EN:**
-> "The report board. Content: 80, the mean of six answers. Attire: 100. Attitude and gaze: computed from my actual movement during this take. The total is a weighted mean — 50 content, 30 attitude, 20 attire — graded S at 90, A at 80, B at 70, C below. Below, per-answer feedback is written in the voice of a strict Korean interviewer."
+> "The report board. Content: 80, the mean of six answers. Attire: 100. Attitude and gaze: computed from my actual movement during this take. The colored bars are the three categories, the middle chart is the six answer scores, and the badge on the right is the grade. The total is a weighted mean — 50 content, 30 attitude, 20 attire — graded S at 90, A at 80, B at 70, C below. Below, per-answer feedback is written in the voice of a strict Korean interviewer."
 
 ---
 
-## Block 5 — Architecture + honest status + close (2:35–3:00)
+## Block 5 — Architecture + honest status + close (2:32–3:00)
 
 **Shot:** Cut to slide 5 (architecture) of the deck, fullscreen (open `docs/slides.pdf`, page 5). End on project name.
 

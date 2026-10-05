@@ -187,13 +187,28 @@ async function runInterview() {
   const grade = total >= 90 ? 'S' : total >= 80 ? 'A' : total >= 70 ? 'B' : 'C';
   lines.push(attire.feedback);
   lines.push(`시선 접촉 ${Math.round(r.eyePct * 100)}% · 인사 ${r.bows}회`);
-  world.showPanel('report', { content, body, attire: attire.score, total, grade, lines: lines.slice(0, 4) });
+  world.showPanel('report', { content, body, attire: attire.score, total, grade, scores, lines: lines.slice(0, 4) });
   sub(`종합 ${total}점 (${grade}) — 패널의 [다시 하기]로 재시도`, `Overall ${total} pts (${grade}) — press [Retry] on the panel to try again.`);
   waitForButton('restart'); // handled in handleButton via location.reload()
 }
 
 // boot from dress room
 (async () => {
+  // ?demo-report=1 — static sample report board for screenshots/press shots.
+  if (new URLSearchParams(location.search).has('demo-report')) {
+    world.showPanel('report', {
+      content: 80, body: 76, attire: 100, total: 83, grade: 'A',
+      scores: [82, 85, 74, 78, 81, 80],
+      lines: [
+        '답변의 구성은 좋습니다만 사례의 구체성이 아쉽습니다.',
+        '장단점의 균형은 좋으나 "음"이 반복되어 준비가 덜 된 인상입니다.',
+        '정장·검정 머리·대기업 — 복장 적합도 우수합니다.',
+        '시선 접촉 74% · 인사 1회',
+      ],
+    });
+    sub('데모용 결과 보드 (?demo-report=1)', 'Demo report board (?demo-report=1)');
+    return;
+  }
   sub('머리·복장·지원 분야를 고르고 [면접 시작]을 누르세요.', 'Choose hair, outfit, and industry, then press [Start Interview].');
   await waitForButton('start');
   runInterview();
