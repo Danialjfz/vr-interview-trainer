@@ -1,7 +1,7 @@
 // main.js — bootstrap, input, state machine (DRESS → INTERVIEW → REPORT)
 import * as THREE from 'three';
 import { World } from './world.js';
-import { AI, QUESTIONS } from './ai.js';
+import { AI, QUESTIONS, QUESTIONS_EN, FOLLOWUPS_EN, enForTranscript } from './ai.js';
 import { Telemetry } from './telemetry.js';
 
 // ---------- renderer / scene / camera ----------
@@ -30,7 +30,15 @@ world.showPanel('dress');
 
 // ---------- DOM helpers ----------
 const $ = (id) => document.getElementById(id);
-const sub = (t) => { const el = $('sub'); el.textContent = t || ''; el.style.display = t ? 'block' : 'none'; };
+const sub = (ko, en) => {
+  const el = $('sub');
+  if (!ko) { el.style.display = 'none'; el.replaceChildren(); return; }
+  const k = document.createElement('div'); k.textContent = ko;
+  const kids = [k];
+  if (en) { const e = document.createElement('div'); e.className = 'en'; e.textContent = en; kids.push(e); }
+  el.replaceChildren(...kids);
+  el.style.display = 'block';
+};
 const hud = $('hud');
 function badge() {
   const b = $('badge');
@@ -134,19 +142,19 @@ async function recordUntil(stopPromise) {
 }
 
 // ---------- interview flow ----------
-async function answerOnce(promptText) {
+async function answerOnce(promptText, promptEn) {
   world.setInterview(promptText, false);
-  sub(promptText);
+  sub(promptText, promptEn);
   await AI.speak(promptText);
-  sub('클릭(또는 스페이스)으로 답변을 시작하세요.');
+  sub('클릭(또는 스페이스)으로 답변을 시작하세요.', 'Click (or press Space) to start your answer.');
   await waitForButton('answer');
   world.setInterview(promptText, true);
-  sub('● 녹음 중… 다시 클릭하면 종료');
+  sub('● 녹음 중… 다시 클릭하면 종료', '● Recording… click again to stop.');
   const blob = await recordUntil(waitForButton('answer'));
   world.setInterview(promptText, false);
-  sub('인식 중…');
+  sub('인식 중…', 'Recognizing…');
   const transcript = await AI.stt(blob);
-  sub('나: ' + transcript);
+  sub('나: ' + transcript, enForTranscript(transcript));
   const ev = await AI.evaluateAnswer(promptText, transcript);
   await new Promise(r => setTimeout(r, 1200));
   return { transcript, ev };
@@ -156,20 +164,20 @@ async function runInterview() {
   world.showPanel('hidden');
   const attire = await AI.attireScore(sel, null); // judged on dress-room exit
   telemetry.start();
-  sub('면접관: 어서 오십시오. 인사하고 시작합시다.');
+  sub('면접관: 어서 오십시오. 인사하고 시작합시다.', 'Interviewer: Welcome. Bow to greet, and let us begin.');
   await AI.speak('어서 오십시오. 인사하고 시작합시다.');
   const scores = [], lines = [];
   for (let i = 0; i < QUESTIONS.length; i++) {
-    const a1 = await answerOnce(QUESTIONS[i]);
+    const a1 = await answerOnce(QUESTIONS[i], QUESTIONS_EN[i]);
     scores.push(a1.ev.score); lines.push(a1.ev.feedback);
     const fu = await AI.followUp(i, a1.transcript);
-    const a2 = await answerOnce(fu);
+    const a2 = await answerOnce(fu, AI.live ? '' : FOLLOWUPS_EN[i]);
     scores.push(a2.ev.score);
-    sub('면접관: 잘 들었습니다.');
+    sub('면접관: 잘 들었습니다.', 'Interviewer: Understood, thank you.');
     await AI.speak('잘 들었습니다.');
   }
   telemetry.stop();
-  sub('면접관: 수고하셨습니다. 결과를 정리하겠습니다.');
+  sub('면접관: 수고하셨습니다. 결과를 정리하겠습니다.', 'Interviewer: Thank you. Let me compile your results.');
   await AI.speak('수고하셨습니다. 결과를 정리하겠습니다.');
 
   const content = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
@@ -180,13 +188,13 @@ async function runInterview() {
   lines.push(attire.feedback);
   lines.push(`시선 접촉 ${Math.round(r.eyePct * 100)}% · 인사 ${r.bows}회`);
   world.showPanel('report', { content, body, attire: attire.score, total, grade, lines: lines.slice(0, 4) });
-  sub(`종합 ${total}점 (${grade}) — 패널의 [다시 하기]로 재시도`);
+  sub(`종합 ${total}점 (${grade}) — 패널의 [다시 하기]로 재시도`, `Overall ${total} pts (${grade}) — press [Retry] on the panel to try again.`);
   waitForButton('restart'); // handled in handleButton via location.reload()
 }
 
 // boot from dress room
 (async () => {
-  sub('머리·복장·지원 분야를 고르고 [면접 시작]을 누르세요.');
+  sub('머리·복장·지원 분야를 고르고 [면접 시작]을 누르세요.', 'Choose hair, outfit, and industry, then press [Start Interview].');
   await waitForButton('start');
   runInterview();
 })();

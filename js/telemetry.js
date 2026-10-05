@@ -111,10 +111,11 @@ export class Telemetry {
     return Math.round(THREE.MathUtils.clamp(raw, 0, 100));
   }
 
-  // Live HUD one-liner, e.g. '시선 62% · 움직임 0.31 · 인사 1'.
+  // Live HUD two-liner (Korean + English), e.g. '시선 62% · 움직임 0.31 · 인사 1'.
   hudText() {
     const { eyePct, fidget, bows } = this.results();
-    return `시선 ${Math.round(eyePct * 100)}% · 움직임 ${fidget.toFixed(2)} · 인사 ${bows}`;
+    const eye = Math.round(eyePct * 100), f = fidget.toFixed(2);
+    return `시선 ${eye}% · 움직임 ${f} · 인사 ${bows}\nEye ${eye}% · Fidget ${f} · Bows ${bows}`;
   }
 
   // ---- internals -------------------------------------------------------------

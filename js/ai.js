@@ -15,6 +15,31 @@ export const FOLLOWUPS = [
   '그 단점을 극복한 구체적인 경험이 있습니까?',
 ];
 
+// English subtitle lines (display only — audio stays Korean).
+export const QUESTIONS_EN = [
+  'Please briefly introduce yourself.',
+  'Why did you apply to our company?',
+  'Tell me your strengths and weaknesses.',
+];
+export const FOLLOWUPS_EN = [
+  'Could you give one concrete example of that experience?',
+  'What would you most like to contribute after joining us?',
+  'Do you have a specific experience of overcoming that weakness?',
+];
+const MOCK_TRANSCRIPTS_EN = [
+  'Hello. I am, um, Kim Ji-hun, a computer-engineering graduate of Gyeongsang National University. I built teamwork and problem-solving skills in several team projects.',
+  'I gained hands-on experience developing a robot control system for my capstone project.',
+  'Uh, I applied after seeing your technology and growth potential. I especially relate to your vision in AI.',
+  'First, um, I communicate with my teammates and always finish what I take on.',
+  'My strength is attention to detail. My weakness is, um, being too much of a perfectionist at times, which I am fixing by setting priorities.',
+  'That perfectionism has actually led to higher-quality outcomes before.',
+];
+// English line for a mock transcript; '' when unknown (e.g. live Whisper output).
+export function enForTranscript(t) {
+  const i = MOCK_TRANSCRIPTS.indexOf(t);
+  return i >= 0 ? MOCK_TRANSCRIPTS_EN[i] : '';
+}
+
 const KEY_STORE = 'vrit_key';
 const API_BASE = 'https://api.openai.com/v1';
 
