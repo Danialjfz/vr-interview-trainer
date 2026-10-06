@@ -55,11 +55,32 @@ python3 -m http.server 8123
 
 ## Meta Quest 2 deployment
 
-1. Host this folder on any static host (e.g. GitHub Pages) — there is no build step.
-2. Open the URL in the **Meta Quest Browser** on the headset.
-3. Click **'VR 입장'** (the app's own WebXR session button) to start an `immersive-vr` session with a `local-floor` reference space.
+No build step — but WebXR requires a **secure context**, so on a LAN either tunnel HTTPS or use `adb reverse` (localhost counts as secure).
 
-> Honest status: developed and verified on the macOS desktop simulator (Chrome mouse-drag look). The Quest 2 deployment path is implemented via WebXR; **on-device testing is pending** (no hardware access during stage 1).
+**Option A — USB + `adb reverse` (recommended, works offline):**
+
+```bash
+adb reverse tcp:8123 tcp:8123      # Quest 2 on USB, developer mode enabled
+python3 -m http.server 8123        # from this folder, on the PC
+# Meta Quest Browser -> http://localhost:8123
+```
+
+**Option B — HTTPS tunnel over Wi-Fi:**
+
+```bash
+python3 -m http.server 8123
+cloudflared tunnel --url http://localhost:8123   # prints a public https:// URL
+# Meta Quest Browser -> that URL
+```
+
+In the headset:
+
+1. Click **'VR 입장'** — starts an `immersive-vr` session with a `local-floor` reference space.
+2. **Controls:** aim the controller **laser** at any in-world panel button and pull the **trigger** — dressing options, the greeting, push-to-talk (toggle), and the report board all work. The trigger is the only input needed.
+3. Head pose comes straight from the headset's **6-DoF tracking**, so eye contact, fidget, and the greeting bow are measured from your real body movement — that is the physical-AI part.
+4. (Optional) Record footage with the headset's built-in capture (Quest menu → Video).
+
+> Honest status: developed and verified on the macOS desktop simulator (mouse-drag look). The full Quest 2 path — WebXR session, controller-trigger UI, 6-DoF telemetry — is implemented; **on-device verification is pending hardware access** (requested from the Glocal Project office).
 
 ## Project structure
 

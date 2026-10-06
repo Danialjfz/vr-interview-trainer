@@ -113,6 +113,7 @@ if (navigator.xr && navigator.xr.isSessionSupported) {
     };
   });
 }
+const lasers = [];
 for (const i of [0, 1]) {
   const c = renderer.xr.getController(i);
   c.addEventListener('selectstart', () => {
@@ -120,6 +121,12 @@ for (const i of [0, 1]) {
     castAndClick(new THREE.Vector3().setFromMatrixPosition(c.matrixWorld),
                  new THREE.Vector3(0, 0, -1).applyMatrix4(m));
   });
+  const laser = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, -3)]),
+    new THREE.LineBasicMaterial({ color: 0xc9a227 }));
+  laser.visible = false; // shown only while presenting (frame loop)
+  c.add(laser);
+  lasers.push(laser);
   rig.add(c);
 }
 
@@ -225,6 +232,7 @@ renderer.setAnimationLoop(() => {
   const dt = Math.min(clock.getDelta(), 0.1);
   telemetry.sample(camera, world.interviewerHead(), dt);
   world.update(dt, AI.isSpeaking());
+  for (const l of lasers) l.visible = renderer.xr.isPresenting;
   renderer.render(scene, camera);
   if (!booted) { booted = true; document.body.dataset.boot = 'ok'; }
 });
